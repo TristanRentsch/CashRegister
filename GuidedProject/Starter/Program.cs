@@ -1,4 +1,4 @@
-﻿/*
+﻿    /*
 This application manages transactions at a store check-out line. The
 check-out line has a cash register, and the register has a cash till
 that is prepared with a number of bills each morning. The till includes
@@ -18,7 +18,7 @@ expected.
 */
 
 string? readResult = null;
-bool useTestData = true;
+bool useTestData = false;
 
 Console.Clear();
 
@@ -129,28 +129,28 @@ static string MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, i
 
     Console.WriteLine("Cashier Returns:");
 
-    while ((changeNeeded > 19) && (cashTill[3] > 0))
+    while ((changeNeeded >= 20) && (cashTill[3] > 0))
     {
         cashTill[3]--;
         changeNeeded -= 20;
         Console.WriteLine("\t A twenty");
     }
 
-    while ((changeNeeded > 9) && (cashTill[2] > 0))
+    while ((changeNeeded >= 10) && (cashTill[2] > 0))
     {
         cashTill[2]--;
         changeNeeded -= 10;
         Console.WriteLine("\t A ten");
     }
 
-    while ((changeNeeded > 4) && (cashTill[1] > 0))
+    while ((changeNeeded >= 5) && (cashTill[1] > 0))
     {
-        cashTill[2]--;
+        cashTill[1]--;
         changeNeeded -= 5;
         Console.WriteLine("\t A five");
     }
 
-    while ((changeNeeded > 0) && (cashTill[0] > 0))
+    while ((changeNeeded >= 1) && (cashTill[0] > 0))
     {
         cashTill[0]--;
         changeNeeded--;
