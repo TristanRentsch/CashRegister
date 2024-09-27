@@ -17,7 +17,6 @@ is used to ensure that logic in the MakeChange method is working as
 expected.
 */
 
-
 string? readResult = null;
 bool useTestData = false;
 
@@ -43,12 +42,11 @@ LogTillStatus(cashTill);
 Console.WriteLine(TillAmountSummary(cashTill));
 
 // display the expected registerDailyStartingCash total
-Console.WriteLine($"Expected till value: {registerCheckTillTotal}");
-Console.WriteLine();
+Console.WriteLine($"Expected till value: {registerCheckTillTotal}\n\r");
 
 var valueGenerator = new Random((int)DateTime.Now.Ticks);
 
-int transactions = 100;
+int transactions = 40;
 
 if (useTestData)
 {
@@ -82,17 +80,16 @@ while (transactions > 0)
     {
         // MakeChange manages the transaction and updates the till 
         MakeChange(itemCost, cashTill, paymentTwenties, paymentTens, paymentFives, paymentOnes);
-
-        // Backup Calculation - each transaction adds current "itemCost" to the till
+        Console.WriteLine($"Transaction successfully completed.");
         registerCheckTillTotal += itemCost;
     }
-    catch (InvalidOperationException e)
+    catch (InvalidOperationException ex)
     {
-        Console.WriteLine($"Could not complete transaction: {e.Message}");
+        Console.WriteLine($"Transaction unsuccessful: {ex.Message}");
     }
 
     Console.WriteLine(TillAmountSummary(cashTill));
-    Console.WriteLine($"Expected till value: {registerCheckTillTotal}");
+    Console.WriteLine($"Expected till value: {registerCheckTillTotal}\n\r");
     Console.WriteLine();
 }
 
@@ -126,39 +123,38 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     if (changeNeeded < 0)
         throw new InvalidOperationException("InvalidOperationException: Not enough money provided to complete the transaction.");
 
-    Console.WriteLine("Cashier prepares the following change:");
+    Console.WriteLine("Cashier Returns:");
 
-    while ((changeNeeded > 19) && (cashTill[3] > 0))
+    while ((changeNeeded >= 20) && (cashTill[3] > 0))
     {
         cashTill[3]--;
         changeNeeded -= 20;
         Console.WriteLine("\t A twenty");
     }
 
-    while ((changeNeeded > 9) && (cashTill[2] > 0))
+    while ((changeNeeded >= 10) && (cashTill[2] > 0))
     {
         cashTill[2]--;
         changeNeeded -= 10;
         Console.WriteLine("\t A ten");
     }
 
-    while ((changeNeeded > 4) && (cashTill[1] > 0))
+    while ((changeNeeded >= 5) && (cashTill[1] > 0))
     {
         cashTill[1]--;
         changeNeeded -= 5;
         Console.WriteLine("\t A five");
     }
 
-    while ((changeNeeded > 0) && (cashTill[0] > 0))
+    while ((changeNeeded >= 1) && (cashTill[0] > 0))
     {
         cashTill[0]--;
-        changeNeeded -= 1;
+        changeNeeded--;
         Console.WriteLine("\t A one");
     }
 
     if (changeNeeded > 0)
-        throw new InvalidOperationException("InvalidOperationException: The till is unable to make change for the cash provided.");
-
+        throw new InvalidOperationException("InvalidOperationException: The till is unable to make the correct change.");
 }
 
 static void LogTillStatus(int[] cashTill)
